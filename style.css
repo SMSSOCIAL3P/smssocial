@@ -1,0 +1,23 @@
+/*
+Theme Name: SMS Social
+Theme URI: http://smssocial.gi.fic.ufg.br/
+Description: O SMS Social é uma ferramenta de gestão de grupos de contatos e envio de mensagens do tipo SMS.
+Author: Equipe SMS Social
+Author URI: http://smssocial.gi.fic.ufg.br/
+Version: 1.0
+Tags: sms, social, sms_social, smssocial, comunidade, enviar, receber, responder, resposivo, Zenvia
+Your theme can be your copyrighted work.
+Like WordPress, this work is released under GNU General Public License, version 2 (GPL).
+ 
+http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+*/
+
+/*<!-- Bootstrap 3.3.4 -->*/
+@import url('styles/bootstrap/css/bootstrap.min.css');
+/*<!-- DATA TABLES -->*/
+@import url('styles/plugins/datatables/dataTables.bootstrap.css');
+/*<!-- Theme style -->*/
+@import url('styles/dist/css/AdminLTE.min.css');
+@import url('styles/dist/css/skins/_all-skins.min.css');
+/*<!-- iCheck -->*/
+@import url('styles/plugins/iCheck/square/blue.css');

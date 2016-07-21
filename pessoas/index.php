@@ -15,7 +15,7 @@ if(!empty($rq["pessoa"])) {
 }
 
 //query para busca os dados na basededados
-$query = "SELECT pes.id, pes.nome, pes.celular, grp.grupo
+$query = "SELECT pes.id, pes.nome, pes.celular, grp.grupo, pes.id_telegram
           FROM {$table_prefix}smssocial_contato pes
           INNER JOIN {$table_prefix}smssocial_grupo_contato grp_pes ON pes.id = grp_pes.contato_id
           INNER JOIN {$table_prefix}smssocial_grupo grp ON grp.id = grp_pes.grupo_id
@@ -57,7 +57,8 @@ $rs = $wpdb->get_results( $query );
                 <th>Numero</th>
                 <th>Nome</th>
                 <th>Celular</th>
-                <th>Grupo</th>                
+                <th>Grupo</th>
+                <th>Id Telegram</th>                
                 <th>Ações</th>
               </tr>
             </thead>
@@ -71,6 +72,7 @@ $rs = $wpdb->get_results( $query );
                   <td><?php echo $pes->nome; ?></td>
                   <td><?php echo $pes->celular; ?></td>
                   <td><?php echo $pes->grupo; ?></td>
+                  <td><?php echo $pes->id_telegram; ?></td>
                   <td>
                     <a href="<?php bloginfo('template_url'); ?>/controller.php?ctr=pessoas&mt=addPessoas&id=<?php echo $pes->id; ?>" title="Editar"> Editar </a> -
                     <a href='<?php bloginfo('template_url'); ?>/pessoas/actions.php?tp=delete&id=<?php echo $pes->id; ?>' onclick="return confirm('Deseja realmente excluir esta pessoa?');" title="Excluir"> Excluir </a>

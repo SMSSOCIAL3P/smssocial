@@ -47,7 +47,7 @@ $query = "SELECT COUNT(*) AS total, p.post_date AS dt_cadastro
           AND cm.contato_id = c.id
           AND c.id = gc.contato_id
           AND gc.grupo_id = g.id
-          AND p.post_type IN ('msg_enviada', 'msg_respondida')
+          AND p.post_type IN ('msg_enviada', 'msg_respondida', 'telegram_msg_enviada','telegram_resp_msg_id')
           AND g.instituicao_id = $instituicao[0]
           $where
           GROUP BY DATE(p.post_date);";

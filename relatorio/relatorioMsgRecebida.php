@@ -46,13 +46,37 @@ $query = "SELECT COUNT(*) AS total, p.post_date AS dt_cadastro
           AND cm.contato_id = c.id
           AND c.id = gc.contato_id
           AND gc.grupo_id = g.id
-          AND p.post_type IN ('msg_recebida')
+          AND p.post_type IN ('msg_recebida','telegram_rec_msg_id')
           AND g.instituicao_id = $instituicao[0]
           $where
           GROUP BY DATE(p.post_date);";
+
 //print $query;
 //executa a query dos dados
-$resultado = $wpdb->get_results( $query );
+$resultadoContato = $wpdb->get_results( $query );
+
+//query para busca os dados na basededados
+$query = "SELECT COUNT(*) AS total, p.post_date AS dt_cadastro
+          FROM {$table_prefix}posts p,
+          {$table_prefix}smssocial_telegram_mensagem tm,
+          {$table_prefix}smssocial_telegram_contato tc,
+          {$table_prefix}smssocial_contato c,
+          {$table_prefix}smssocial_grupo_contato gc,
+          {$table_prefix}smssocial_grupo g
+          $from
+          WHERE p.ID = tm.post_ID
+          AND tm.telegram_id = tc.id
+          AND tc.id_telegram = c.id_telegram
+          AND c.id = gc.contato_id
+          AND gc.grupo_id = g.id
+          AND p.post_type IN ('telegram_rec_msg_id')
+          AND g.instituicao_id = $instituicao[0]
+          $where
+          GROUP BY DATE(p.post_date);";
+
+//print $query;
+//executa a query dos dados
+$resultadoTelegram = $wpdb->get_results( $query );
 
 //configura o grafico
 $container = 'container';
@@ -60,9 +84,20 @@ $hc = new Highcharts('line',$container);
 $hc->setTitulo('Msg. Enviadas');
 $hc->setTituloLateral('Qtd.');
 
-foreach ($resultado as $res) {	
-	$hc->addCategoria(FormataData($res->dt_cadastro));
-	$hc->addValores("Msg. Recebida", $res->total);	
+$dados = array();
+foreach ($resultadoContato as $res) {  
+  $dados[FormataData($res->dt_cadastro)] += $res->total;
+}
+
+foreach ($resultadoTelegram as $resT) {  
+  $dados[FormataData($resT->dt_cadastro)] += $resT->total;
+}
+
+//print "<pre>";print_r($dados);
+
+foreach ($dados as $data => $total) {
+  $hc->addCategoria($data);
+	$hc->addValores("Msg. Recebida", $total);
 }
 
 $relatorio = $hc->draw();

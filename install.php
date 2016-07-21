@@ -41,6 +41,7 @@ function smsSocial_create_tables () {
 			  email VARCHAR(150) NULL COMMENT 'email do contato\n',
 			  flg_atv TINYINT NULL DEFAULT 1 COMMENT 'campo para ativar ou inativar o contato',
 			  dt_cadastro TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Campo para saber quando o contato foi cadastrado',
+			  id_telegram VARCHAR(250) NULL COMMENT 'Id do telegram para comunicacao\n',
 			  PRIMARY KEY (id))
 			ENGINE = InnoDB;";
 
@@ -87,6 +88,42 @@ function smsSocial_create_tables () {
 			  PRIMARY KEY (id))
 			ENGINE = InnoDB;";
 
+	$sql8 = " CREATE TABLE IF NOT EXISTS {$table_prefix}smssocial_conf_telegram (
+			  id INT NOT NULL AUTO_INCREMENT,
+			  token VARCHAR(250) NULL,
+			  nome VARCHAR(250) NULL,
+			  dt_cadastro TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+			  PRIMARY KEY (id))
+			ENGINE = InnoDB;";
+
+	$sql9 = " CREATE TABLE IF NOT EXISTS {$table_prefix}smssocial_telegram_contato (
+			  id INT NOT NULL AUTO_INCREMENT,
+			  nome VARCHAR(250) NULL,
+			  id_telegram VARCHAR(250) NULL COMMENT 'Id do telegram para comunicacao\n',
+			  dt_cadastro TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+			  PRIMARY KEY (id))
+			ENGINE = InnoDB;";
+
+	$sql10 = "CREATE TABLE IF NOT EXISTS {$table_prefix}smssocial_telegram_mensagem (
+			  id INT(11) NOT NULL AUTO_INCREMENT,
+			  telegram_id INT(11) NOT NULL,
+			  post_ID INT(11) NOT NULL,
+			  PRIMARY KEY (id,telegram_id),
+			  KEY fk_post_smssocial_telegram (telegram_id),
+			  CONSTRAINT fk_post_smssocial_telegram_contato FOREIGN KEY (telegram_id) REFERENCES {$table_prefix}smssocial_telegram_contato (id) ON DELETE NO ACTION ON UPDATE NO ACTION
+			) ENGINE=INNODB DEFAULT CHARSET=latin1";
+
+	/*$sql11 = "CREATE TABLE IF NOT EXISTS {$table_prefix}smssocial_telegram_grupo (
+			  id INT(11) NOT NULL AUTO_INCREMENT,
+			  grupo_id INT(11) NOT NULL,
+			  telegram_id INT(11) NOT NULL,
+			  PRIMARY KEY (id,grupo_id,telegram_id),
+			  KEY fk_smssocial_grupo_smssocial_telegram (grupo_id),
+			  KEY fk_smssocial_telegram_smssocial_grupo (telegram_id),
+			  CONSTRAINT fk_smssocial_telegram_smssocial_grupo FOREIGN KEY (telegram_id) REFERENCES {$table_prefix}smssocial_telegram_contato (id) ON DELETE NO ACTION ON UPDATE NO ACTION,
+			  CONSTRAINT fk_smssocial_grupo_smssocial_telegram FOREIGN KEY (grupo_id) REFERENCES {$table_prefix}smssocial_grupo (id) ON DELETE NO ACTION ON UPDATE NO ACTION
+			) ENGINE=INNODB DEFAULT CHARSET=latin1";*/
+
 
 	require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
 
@@ -97,6 +134,10 @@ function smsSocial_create_tables () {
 	dbDelta($sql5);
 	dbDelta($sql6);
 	dbDelta($sql7);
+	dbDelta($sql8);
+	dbDelta($sql9);
+	/*dbDelta($sql10);
+	dbDelta($sql11);*/
 
 } 
 

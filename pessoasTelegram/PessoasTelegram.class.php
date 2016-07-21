@@ -3,20 +3,83 @@
  * Classe para trabalhar os dados das pessoas/contatos do sms social
  */
 
-class Pessoas {
+class PessoasTelegram {
 
 	/**
 	 * Metodo construtor da class
 	 */ 
 	public function __construct() {}
-	
+
+	/**
+	 * Pega o token configurado do telegram
+	 */ 
+	public function getConfTelegram() {
+
+		//variaveis globais
+		global $wpdb, $table_prefix;
+
+		//query para busca os dados na basededados
+		$query = "SELECT * FROM {$table_prefix}smssocial_conf_telegram tel";
+
+		//print $query;
+		//executa a query dos dados
+		$rs = $wpdb->get_row($query);
+
+		return $rs;
+
+	} //fim getToken
+
+	/**
+	 * Pega se a pessoa ja esta cadastrada no sms social com o id do telegram
+	 */ 
+	public function getOnePessoaTelegram($id_telegram) {
+
+		//variaveis globais
+		global $wpdb, $table_prefix;
+
+		//query para pegar o telegram
+		$query = "SELECT id FROM {$table_prefix}smssocial_telegram_contato WHERE id_telegram = \"".$id_telegram."\" ";
+		
+		//executa a query
+		$rs = $wpdb->get_row($query);
+		
+		//retorna o result set
+		return $rs->id; 
+
+	} //fim getPessoaTelegram
+
+	/**
+	 * Pega se a pessoa ja esta cadastrada no sms social com o id do telegram
+	 */ 
+	public function getPessoaTelegram($id_telegram = null) {
+
+		//variaveis globais
+		global $wpdb, $table_prefix;
+
+		//monta o where
+		$where = "";
+		if(!is_null($id_telegram)) {
+			$where = " WHERE id_telegram = \"".$id_telegram."\" ";
+		}
+
+		//query para pegar o telegram
+		$query = "SELECT * FROM {$table_prefix}smssocial_telegram_contato {$where} ";
+		
+		//executa a query
+		$rs = $wpdb->get_results($query);
+		
+		//retorna o result set
+		return $rs->id; 
+
+	} //fim getPessoaTelegram
+
 	/**
 	 * Metodo para inserir pessoas na base de dados tabela smssocial_contatos
 	 * 
 	 * @Params:
 	 * @pessoas -> array com os dados do formulario
 	 */
-	public function insertPessoas($pessoas) {
+	public function insertPessoasTelegram($pessoas) {
 
 		//variaveis globais
 		global $wpdb, $table_prefix;
@@ -25,46 +88,16 @@ class Pessoas {
 
 		//colunas e valores		
 		$pes["nome"]			= $pessoas["nome"];
-		$pes["celular"] 		= $pessoas["celular"];
-		$pes["email"]	 		= $pessoas["email"];
 		$pes["id_telegram"]		= $pessoas["id_telegram"];
 
 		//executa a insercao
-		if($wpdb->insert("{$table_prefix}smssocial_contato", $pes)) {
+		if($wpdb->insert("{$table_prefix}smssocial_telegram_contato", $pes)) {
 			//retorna o id da tabela inserida
-			$contato_id = $wpdb->insert_id;
-			//variavel auxiliar
-			$bollGrupoContato = true;
-			//varre os grupos 
-			foreach($pessoas["grupo_id"] as $grp_id) {
-				//seta os valores
-				$grp_cont["grupo_id"] 	= $grp_id;
-				$grp_cont["contato_id"] = $contato_id;
+			return $wpdb->insert_id;
+		}
 
-				//insere na tabela smssocial_grupo_contato
-				if(!$wpdb->insert("{$table_prefix}smssocial_grupo_contato", $grp_cont)) {
-					$bollGrupoContato = false;
-				}//fim insercao
-			} // fim varrer os grupos
-
-			//verifica qual mensagem ira imprimir
-			if($bollGrupoContato) {
-				$_SESSION["msgOk"] = "Pessoa incluida com sucesso!";
-
-				return $contato_id;
-
-			} else {
-				$_SESSION["msgErro"] = "Erro ao inserir uma nova pessoa e o relacionamento com seus grupos!";
-
-				return false;
-
-			} //fim verificacao de mensagem
-
-		} else {
-			$_SESSION["msgErro"] = "Erro ao inserir uma nova pessoa!\n Verifique se colocou os dados corretamente (Nome, Celular, Email).";
-
-		} // fim verificacao
 		return false;
+
 	} // fim insertPessoas
 
 	/**
@@ -73,7 +106,7 @@ class Pessoas {
 	 * @Params:
 	 * @pessoas -> array com os dados para alteração na base de dados 
 	 */ 
-	public function updatePessoas($pessoas) {
+	public function updatePessoasTelegram($pessoas) {
 
 		//variaveis globais
 		global $wpdb, $table_prefix;
@@ -145,56 +178,12 @@ class Pessoas {
 	} // fim updatePessoas
 
 	/**
-	 * Metodo para alterar os dados na tabela smssocial_contato
-	 * 
-	 * @Params:
-	 * @pessoas -> array com os dados para alteração na base de dados 
-	 */ 
-	public function updateTelegramPessoas($id, $id_telegram) {
-
-		//variaveis globais
-		global $wpdb, $table_prefix;
-
-		//onde estará os campos comos valores da tabela
-		$pes = array();
-		$contato_id = $id;
-		//colunas e valores		
-		$pes["id_telegram"] = $id_telegram;
-
-		//valor
-		$where  = array('id'=>$contato_id);
-
-		/*$wpdb->update("{$table_prefix}smssocial_contato", $pes, $where);
-		$wpdb->show_errors();
-		$wpdb->print_error();
-		exit;*/
-
-		//executa a alteracao
-		if($wpdb->update("{$table_prefix}smssocial_contato", $pes, $where)) {
-
-			/*$wpdb->delete("{$table_prefix}smssocial_grupo_contato", array("contato_id" => $contato_id));
-			$wpdb->show_errors();
-			$wpdb->print_error();
-			exit;*/
-
-			//$_SESSION["msgOk"] = "Pessoa alterada com sucesso!";
-			return $contato_id;
-
-		} else {
-			//$_SESSION["msgErro"] = "Erro ao alterar pessoa!";
-			return false;
-		} // fim verificacao
-
-	} // fim updatePessoasTelegram
-
-
-	/**
 	 * Metodo para inativar o contato
 	 * 
 	 * Params:
 	 * $id -> identificador da pessoa que sera inativada
 	 */
-	public function deletePessoas($id) {
+	public function deletePessoasTelegram($id) {
 
 		//variaveis globais
 		global $wpdb, $table_prefix;
@@ -217,92 +206,11 @@ class Pessoas {
 
 	} // deletePessoas
 
-
-	/**
-	 * Metodo para verificar o arquivo e importar as pessoas para a base de dados
-	 * Params:
-	 * @param $arquivo 
-	 * @param $conteudo
-	 * @param $grupo_id
-	 * 
-	 */ 
-	public function importarPessoas($arquivo,$conteudo,$grupo_id) {
-		//tipos que serao permitidos
-		$tiposPermitidos= array('text/csv');
-		
-		//verifica o tipo do arquivo
-		if(array_search($_FILES["importar"]['type'][0], $tiposPermitidos) === false){
-			$_SESSION["msgErro"] = "Arquivo com a extensão não permitida!";
-		}else{
-			//arquivo em memória
-			$conteudo_temp = $conteudo[0];
-		
-			//pega o nome do arquivo
-			$arquivo = $arquivo[0];
-			//verifica se existe o arquivo
-			if(!empty($arquivo)) {
-
-				//abre o arquivo para leitura
-				$arquivo = fopen($conteudo_temp, "r");
-				//contador de linhas
-				$row = 1;
-				//variavel booleana auxiliar para erros
-				$boolErro = true;
-				//conta quantas pessoas foram inseridas
-				$countPes = 0;
-
-				//seta qual grupo ira particiar este contato
-				$pessoa["grupo_id"][] 	= $grupo_id;
-
-				//varre o arquivo
-				while (($data = fgetcsv($arquivo, 1000, ";")) !== FALSE) {
-					$boolErro = true;
-					//verifica se a linha está preenchida corretamente sem espaços em branco
-					if(empty($data[0]) || empty($data[1])) {
-						$_SESSION["msgErro"] .= "Linha $row está com o nome ou celular em branco e não foi inserida.";
-						$boolErro = false;
-					}
-
-					//verifica se não houve erro
-					if($boolErro) {
-						//monta o array para inserir na tabela
-						$pessoa["nome"] 		= $data[0];
-						$pessoa["celular"] 		= $data[1];						
-						$pessoa["email"] 		= "";
-						
-						//insere as pessoas na tabela
-						if($this->insertPessoas($pessoa)) {
-							//conta quantas pessoas foram inseridas
-							$countPes++;
-						}//fim verificacao insercao pessoas 
-						
-					} //fim verificacao da inserção das pessoas
-					
-					//conta a linha
-				    $row++;
-
-				} //fim while
-				//fecha o arquivo que estava para leitura
-				fclose ($arquivo);
-				
-				$_SESSION["msgOk"] = "Foram inseridas $countPes pessoas com sucesso!";
-				
-				return true;
-
-			} //fim verificacao do aquivo
-				
-		}//fim verificacao da extensao
-
-		return false;
-
-	} //fim importarPessoas
-
-
 	/**
 	 * Metodo void para exportar os dados em excel 
 	 * 
 	 */ 
-	public function exportarPessoas() {
+	public function exportarPessoasTelegram() {
 		//variaveis globais
 		global $wpdb, $table_prefix;
 		

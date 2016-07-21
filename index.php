@@ -88,7 +88,7 @@ $alert = "<div class=\"row\" $display >
           }
           //printa a mensagem
           echo $alert;
-
+          
           //tela de welcome
           get_template_part( $ctr."/".$mt );
       ?>

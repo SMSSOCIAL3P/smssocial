@@ -12,6 +12,7 @@ $perfilSms = get_user_meta($current_user->ID,"perfilSms");
 //para falha de segurança de permissão para não poder 
 switch ($_REQUEST["ctr"]) {
 	case "grupo":
+	case "confTelegram":
 	case "gatewayConfig":
 		if($perfilSms[0] != 1) {
 			$_SESSION["msgErro"] = "Você não tem permissão para acessar esta página.";

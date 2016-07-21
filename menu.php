@@ -44,20 +44,33 @@ if($current_user->ID > 0) {
             <li <?php if($ctr == "respostaMsg" && ($mt == "index" || $mt == "addRespMensagem")) echo 'class="active"'; ?> ><a href="<?php bloginfo('template_url'); ?>/controller.php?ctr=respostaMsg"><i class="fa fa-inbox"></i> Recebidas</a></li>
           </ul>
         </li>
-        
-        <li class="treeview <?php if($ctr == "pessoas" || $ctr == "grupos") echo 'active'; ?>">
+
+        <li class="treeview <?php if($ctr == "telegram") echo 'active'; ?>">
           <a style="background:#1F292E;" href="#">
+            <i class="fa fa-paper-plane-o"></i> <span>Telegram</span> <i class="fa fa-angle-left pull-right"></i>
+          </a>
+          <ul class="treeview-menu">
+            <li <?php if($mt == "addMsg") echo 'class="active"'; ?> ><a href="<?php bloginfo('template_url'); ?>/controller.php?ctr=telegram&mt=addMsg"><i class="fa fa-comment-o"></i> Nova</a></li>
+            <li <?php if($ctr == "telegram" && $mt == "index") echo 'class="active"'; ?> ><a href="<?php bloginfo('template_url'); ?>/controller.php?ctr=telegram"><i class="fa fa-send"></i> Enviadas</a></li>
+            <li <?php if($mt == "msgRecebida" || $mt == "addRespMensagemTelegram") echo 'class="active"'; ?> ><a href="<?php bloginfo('template_url'); ?>/controller.php?ctr=telegram&mt=msgRecebida"><i class="fa fa-inbox"></i> Recebidas</a></li>
+
+          </ul>
+        </li>
+        
+        <li class="treeview <?php if($ctr == "pessoas" || $ctr == "pessoasTelegram" || $ctr == "grupos") echo 'active'; ?>">
+          <a style="background:#182024;" href="#">
             <i class="fa fa-male"></i><span>Contatos</span><i class="fa fa-angle-left pull-right"></i>
           </a>
           <ul class="treeview-menu">
             <li <?php if($ctr == "pessoas" && ($mt == "index" || $mt == "addPessoas")) echo 'class="active"'; ?> ><a href="<?php bloginfo('template_url'); ?>/controller.php?ctr=pessoas"><i class="fa fa-user"></i> Pessoas</a></li>
+            <li <?php if($ctr == "pessoasTelegram" && ($mt == "index" || $mt == "addPessoas")) echo 'class="active"'; ?> ><a href="<?php bloginfo('template_url'); ?>/controller.php?ctr=pessoasTelegram"><i class="fa fa-user-secret"></i> Pessoas Telegram</a></li>
             <li <?php if($ctr == "grupos") echo 'class="active"'; ?> ><a href="<?php bloginfo('template_url'); ?>/controller.php?ctr=grupos"><i class="fa fa-users"></i> Grupos</a></li>
             <li <?php if($ctr == "pessoas" && $mt == "importar") echo 'class="active"'; ?> ><a href="<?php bloginfo('template_url'); ?>/controller.php?ctr=pessoas&mt=importar"><i class="fa fa-mail-reply"></i> Importar</a></li>
           </ul>
         </li>
 
         <li class="treeview <?php if($ctr == "relatorio") echo 'active'; ?> ">
-          <a style="background:#182024;" href="#">
+          <a style="background:#0b0f11;" href="#">
             <i class="fa fa-bar-chart"></i><span>Relatórios</span><i class="fa fa-angle-left pull-right"></i>
           </a>
           <ul class="treeview-menu">
@@ -71,14 +84,14 @@ if($current_user->ID > 0) {
         <?php
         if($perfilSms[0] == 1) {
         ?>
-          <li class="treeview <?php if($ctr == "gateway" || $ctr == "instituicao" || $ctr == "usuario") echo 'active'; ?>" >
+          <li class="treeview <?php if($ctr == "gateway" || $ctr == "instituicao" || $ctr == "usuario" || $ctr == "confTelegram") echo 'active'; ?>" >
             <a href="#">
               <i class="fa fa-cogs"></i><span>Admin</span><i class="fa fa-angle-left pull-right"></i>
             </a>
             <ul class="treeview-menu">
-              
               <li <?php if($ctr == "instituicao") echo 'class="active"'; ?> ><a href="<?php bloginfo('template_url'); ?>/controller.php?ctr=instituicao"><i class="fa fa-university"></i> Instituição</a></li>
               <li <?php if($ctr == "gateway") echo 'class="active"'; ?> ><a href="<?php bloginfo('template_url'); ?>/controller.php?ctr=gateway"><i class="fa fa-rocket"></i> Provedor</a></li>
+              <li <?php if($ctr == "confTelegram") echo 'class="active"'; ?> ><a href="<?php bloginfo('template_url'); ?>/controller.php?ctr=confTelegram"><i class="fa fa-cog"></i> Conf. Telegram</a></li>
               <li <?php if($ctr == "usuario") echo 'class="active"'; ?> ><a href="<?php bloginfo('template_url'); ?>/controller.php?ctr=usuario"><i class="fa fa-key"></i> Usuario</a></li>
              
             </ul>

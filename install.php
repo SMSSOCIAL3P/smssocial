@@ -136,8 +136,8 @@ function smsSocial_create_tables () {
 	dbDelta($sql7);
 	dbDelta($sql8);
 	dbDelta($sql9);
-	/*dbDelta($sql10);
-	dbDelta($sql11);*/
+	dbDelta($sql10);
+	//dbDelta($sql11);
 
 } 
 
